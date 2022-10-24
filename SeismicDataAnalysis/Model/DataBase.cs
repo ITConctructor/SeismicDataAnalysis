@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace SeismicDataAnalysis.Model
 {
-    public class DataBase
+    public static class DataBase
     {
-
+        public static List<string> LoadedData { get; set; }
     }
 }

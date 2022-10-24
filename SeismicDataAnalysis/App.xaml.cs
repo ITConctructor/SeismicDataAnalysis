@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SeismicDataAnalysis.Model;
+using SeismicDataAnalysis.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +15,19 @@ namespace SeismicDataAnalysis
     /// </summary>
     public partial class App : Application
     {
+        App()
+        {
+            InitializeComponent();
+        }
+
+        [STAThread]
+        static void Main()
+        {
+            App app = new App();
+            MainWindow window = new MainWindow();
+            ViewModelBase viewModel = new ViewModelBase(window);
+            app.Run(window);
+        }
+        
     }
 }
