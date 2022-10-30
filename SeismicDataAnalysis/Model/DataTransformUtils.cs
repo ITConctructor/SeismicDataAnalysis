@@ -22,19 +22,19 @@ namespace SeismicDataAnalysis.Model
                 chan.NumberOfPoints = pointsNumber;
             }
             //Считываем длительность измерения
-            int recordLengthStartIndex = pointsNumberEndIndex + 42;
-            int recordLengthEndIndex = rawData[recordLengthStartIndex..].IndexOf(' ') - 1;
-            string strRecordLength = "0" + rawData[recordLengthStartIndex..recordLengthEndIndex];
-            int recordLength;
-            if (int.TryParse(strRecordLength, out recordLength))
+            int recordSpaceStartIndex = pointsNumberEndIndex + 42;
+            int recordSpaceEndIndex = rawData[recordSpaceStartIndex..].IndexOf(' ') - 1;
+            string strRecordSpace = "0" + rawData[recordSpaceStartIndex..recordSpaceEndIndex];
+            int recordSpace;
+            if (int.TryParse(strRecordSpace, out recordSpace))
             {
-                chan.LengthOfRecord = recordLength;
+                chan.SpaceOfRecord = recordSpace;
             }
 
             //Считываем номер станции
             int stationNumberStartIndex = rawData.IndexOf("Station No.") + 13;
             int stationNumberEndIndex = rawData[stationNumberStartIndex..].IndexOf(' ') - 1;
-            string strStationNumber = rawData[stationNumberStartIndex..recordLengthEndIndex];
+            string strStationNumber = rawData[stationNumberStartIndex..recordSpaceEndIndex];
             int stationNumber;
             if (int.TryParse(strStationNumber, out stationNumber))
             {
@@ -84,6 +84,13 @@ namespace SeismicDataAnalysis.Model
             chan.Minute = int.Parse(timeArray[1]);
             chan.Second = int.Parse(timeArray[2]);
             return new ChannelData();
+
+            //Считываем название станции
+            int bldgIndex = rawData.IndexOf("Bldg");
+            int stationSeparatorIndex = rawData[..bldgIndex].LastIndexOf(" _");
+            int stationNameIndex = rawData[..stationSeparatorIndex].LastIndexOf(' ');
+            string stationName = rawData[stationNameIndex..(bldgIndex + 3)];
+            chan.StationName = stationName;
         }
     }
 }

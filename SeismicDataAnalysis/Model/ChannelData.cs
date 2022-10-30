@@ -10,7 +10,7 @@ namespace SeismicDataAnalysis.Model
     {
         public string PhysicalParameter { get; set; }
         public int NumberOfPoints { get; set; }
-        public double LengthOfRecord { get; set; }
+        public double SpaceOfRecord { get; set; }
         public int StationNumber { get; set; }
 
         //День недели, месяц, число, год и время записи
@@ -21,5 +21,7 @@ namespace SeismicDataAnalysis.Model
         public int Hour { get; set; }
         public int Minute { get; set; }
         public int Second { get; set; }
+
+        public string StationName { get; set; }
     }
 }
