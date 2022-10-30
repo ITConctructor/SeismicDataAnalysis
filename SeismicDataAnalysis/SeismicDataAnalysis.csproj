@@ -15,4 +15,10 @@
     <Page Include="App.xaml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.Windows.Controls.DataVisualization.Toolkit">
+      <HintPath>..\..\system.windows.controls.datavisualization.toolkit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

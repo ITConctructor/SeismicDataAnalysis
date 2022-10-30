@@ -38,6 +38,13 @@ namespace SeismicDataAnalysis.ViewModel
                     }
                 }
             }
+
+            //Преобразуем строковые данные из списка LoadedData в класс ChannelData и записываем их в список TransformedData
+            foreach (string rawStr in DataBase.LoadedData)
+            {
+                ChannelData channelData = DataTransformUtils.TransformRawData(rawStr);
+                DataBase.TransformedData.Add(channelData);
+            }
         }
         #endregion
 

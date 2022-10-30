@@ -8,7 +8,7 @@ namespace SeismicDataAnalysis.Model
 {
     public static class DataBase
     {
-        public static List<string> LoadedData { get; set; }
-        public static List<string> TransformedData { get; set; }
+        public static List<string> LoadedData { get; set; } = new List<string>();
+        public static List<ChannelData> TransformedData { get; set; } = new List<ChannelData>();
     }
 }

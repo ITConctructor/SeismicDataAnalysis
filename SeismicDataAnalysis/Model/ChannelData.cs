@@ -23,5 +23,6 @@ namespace SeismicDataAnalysis.Model
         public int Second { get; set; }
 
         public string StationName { get; set; }
+        public List<double> AccelerationsArray { get; set; } = new List<double>();
     }
 }
