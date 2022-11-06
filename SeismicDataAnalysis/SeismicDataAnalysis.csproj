@@ -12,12 +12,28 @@
   </ItemGroup>
 
   <ItemGroup>
+    <COMReference Include="{215d64d2-031c-33c7-96e3-61794cd1ee61}">
+      <WrapperTool>tlbimp</WrapperTool>
+      <VersionMinor>4</VersionMinor>
+      <VersionMajor>2</VersionMajor>
+      <Guid>215d64d2-031c-33c7-96e3-61794cd1ee61</Guid>
+    </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DynamicDataDisplayWpf" Version="0.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Page Include="App.xaml" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="System.Windows.Controls.DataVisualization.Toolkit">
-      <HintPath>..\..\system.windows.controls.datavisualization.toolkit.dll</HintPath>
+      <HintPath>..\..\System.Windows.Controls.DataVisualization.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms.resources">
+      <HintPath>..\..\..\..\..\..\..\..\Windows\WinSxS\x86_microsoft-windows-n..xcorecomp.resources_31bf3856ad364e35_10.0.19041.1_ru-ru_a6764003ca558068\System.Windows.Forms.resources.dll</HintPath>
     </Reference>
   </ItemGroup>
 

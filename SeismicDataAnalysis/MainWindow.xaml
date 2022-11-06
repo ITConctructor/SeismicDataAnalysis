@@ -3,6 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:DV="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+        xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+        xmlns:d3="http://research.microsoft.com/DynamicDataDisplay/1.0"
         xmlns:local="clr-namespace:SeismicDataAnalysis"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
@@ -10,12 +13,28 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <TextBlock  Margin="10, 10, 10, 10" Text="Выберите данные"/>
-            <Button Content="Обзор" Margin="10, 10, 10, 10" Command="{Binding LoadDataCommand}"/>
+            <TextBlock  Margin="10, 10, 10, 10" Text="Choose files:"/>
+            <Button Content="Browse" Margin="10, 10, 10, 10" 
+                    Command="{Binding LoadDataCommand}"/>
+            <Button Content="Save chart" Margin="10, 10, 10, 10"
+                    Command="{Binding SaveChartCommand}"/>
         </StackPanel>
-        <ListBox Grid.Row="1" Margin="10, 10, 10, 10"/>
+        <ListBox Grid.Row="1" Margin="10, 10, 10, 10" 
+                 ItemsSource="{Binding transformedData}" 
+                 SelectionMode="Single" 
+                 SelectedItem="{Binding SelectedFile, Mode=TwoWay}"
+                 MinHeight="50"/>
+        <d3:ChartPlotter x:Name="AccelerationChart" Grid.Row="2" 
+                         Margin="10, 10, 10, 10">
+            <d3:VerticalAxisTitle>
+                Accelerations, cm/sec2
+            </d3:VerticalAxisTitle>
+            <d3:HorizontalAxisTitle>
+                Time, sec
+            </d3:HorizontalAxisTitle>
+        </d3:ChartPlotter>
     </Grid>
 </Window>

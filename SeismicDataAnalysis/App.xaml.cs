@@ -26,6 +26,7 @@ namespace SeismicDataAnalysis
             App app = new App();
             MainWindow window = new MainWindow();
             ViewModelBase viewModel = new ViewModelBase(window);
+            window.DataContext = viewModel;
             app.Run(window);
         }
         

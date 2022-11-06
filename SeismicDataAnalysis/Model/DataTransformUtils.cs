@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -142,7 +143,35 @@ namespace SeismicDataAnalysis.Model
                 }
             }
             chan.AccelerationsArray = accelerations;
-            return new ChannelData();
+            return chan;
+        }
+
+        public static KeyValuePair<double, double>[] CreateKVPairs(ChannelData transformedData)
+        {
+            KeyValuePair<double, double>[] result = new KeyValuePair<double, double>[transformedData.AccelerationsArray.Count];
+            //Создаем список значений по х
+            double[] xAxis = new double[transformedData.AccelerationsArray.Count];
+            for (int i = 0; i < transformedData.AccelerationsArray.Count; i++)
+            {
+                xAxis.Append(i * transformedData.SpaceOfRecord);
+            }
+            //Заполняем масив пар ключей-значений
+            for (int i = 0; i < transformedData.AccelerationsArray.Count; i++)
+            {
+                KeyValuePair<double, double> pair = new KeyValuePair<double, double>(transformedData.AccelerationsArray[i], xAxis[i]);
+                result.Append(pair);
+            }
+            return result;
+        }
+
+        public static double[] CreateArrayFromSpan(double span, int count)
+        {
+            double[] result = new double[count];
+            for (int i = 0; i < count; i++)
+            {
+                result[i] = span * i;
+            }
+            return result;
         }
     }
 }
