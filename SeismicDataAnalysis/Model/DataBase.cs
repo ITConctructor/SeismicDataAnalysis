@@ -10,6 +10,7 @@ namespace SeismicDataAnalysis.Model
     public class DataBase
     {
         public List<string> LoadedData { get; set; } = new List<string>();
-        public ObservableCollection<ChannelData> TransformedData { get; set; } = new ObservableCollection<ChannelData>();
+        public ObservableCollection<FileData> TransformedData { get; set; } = new ObservableCollection<FileData>();
+        public ObservableCollection<ChannelData> ChannelData { get; set; } = new ObservableCollection<ChannelData>();
     }
 }

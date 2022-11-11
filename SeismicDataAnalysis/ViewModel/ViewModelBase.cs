@@ -40,7 +40,7 @@ namespace SeismicDataAnalysis.ViewModel
         #endregion
 
         #region Связь с интерфейсом
-        public ObservableCollection<ChannelData> transformedData
+        public ObservableCollection<FileData> transformedData
         {
             get { return Model.TransformedData; }
             set
@@ -50,23 +50,38 @@ namespace SeismicDataAnalysis.ViewModel
             }
         }
         
-        private ChannelData _selectedFile;
-        public ChannelData SelectedFile 
+        private FileData _selectedFile;
+        public FileData SelectedFile 
         {
             get { return _selectedFile; } 
             set 
             { 
                 _selectedFile = value;
                 OnPropertyChanged();
-                DataVisualisationUtils.AddLineGraph(_win.AccelerationChart, 
-                    value.AccelerationsArray.ToArray(), 
-                    DataTransformUtils.CreateArrayFromSpan(value.SpaceOfRecord, value.AccelerationsArray.Count));
-                DataVisualisationUtils.AddChannelDescription(_win.AccelerationChart, value);
             } 
         }
 
-        public ObservableCollection<Point> AccelerationData = new ObservableCollection<Point>();
+        public ObservableCollection<ChannelData> channelData
+        {
+            get { return Model.ChannelData; }
+            set
+            {
+                Model.ChannelData = value;
+                OnPropertyChanged();
+            }
+        }
 
+        private ChannelData _selectedChannel;
+        public ChannelData SelectedChannel
+        {
+            get { return _selectedChannel; }
+            set
+            {
+                _selectedChannel = value;
+                OnPropertyChanged();
+                DataVisualisationUtils.UpdateCharts(_win.ChartPanel, value);
+            }
+        }
         #endregion
 
         #region Методы
@@ -94,9 +109,15 @@ namespace SeismicDataAnalysis.ViewModel
                 //Преобразуем строковые данные из списка LoadedData в класс ChannelData и записываем их в список TransformedData
                 for (int i = 0; i < Model.LoadedData.Count; i++)
                 {
-                    ChannelData channelData = DataTransformUtils.TransformRawData(Model.LoadedData[i]);
+                    FileData channelData = DataTransformUtils.TransformRawData(Model.LoadedData[i]);
                     channelData.FileName = FileNames[i].Split("\\", StringSplitOptions.None).Last();
                     Model.TransformedData.Add(channelData);
+                }
+                //Сливаем данные разных файлов одного канала в один класс
+                ObservableCollection<ChannelData> buffer = DataTransformUtils.CreatePivots(Model.TransformedData);
+                foreach (ChannelData chan in buffer)
+                {
+                    Model.ChannelData.Add(chan);
                 }
             }
         }
@@ -106,7 +127,7 @@ namespace SeismicDataAnalysis.ViewModel
         /// </summary>
         public void SaveChart()
         {
-            _win.AccelerationChart.SaveScreenshot(@"C:\Users\Евгений\Desktop\Chart.png");
+            //_win.AccelerationChart.SaveScreenshot(@"C:\Users\Евгений\Desktop\Chart.png");
         }
         #endregion
 

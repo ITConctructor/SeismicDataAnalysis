@@ -8,11 +8,13 @@
         xmlns:d3="http://research.microsoft.com/DynamicDataDisplay/1.0"
         xmlns:local="clr-namespace:SeismicDataAnalysis"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="Auto" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition MinHeight="70"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
@@ -27,14 +29,20 @@
                  SelectionMode="Single" 
                  SelectedItem="{Binding SelectedFile, Mode=TwoWay}"
                  MinHeight="50"/>
-        <d3:ChartPlotter x:Name="AccelerationChart" Grid.Row="2" 
-                         Margin="10, 10, 10, 10">
-            <d3:VerticalAxisTitle>
-                Accelerations, cm/sec2
-            </d3:VerticalAxisTitle>
-            <d3:HorizontalAxisTitle>
-                Time, sec
-            </d3:HorizontalAxisTitle>
-        </d3:ChartPlotter>
+        <StackPanel Grid.Row="2" Orientation="Horizontal"
+                    Margin="10, 10, 10, 10">
+            <TextBlock Text="Show data for channel:" 
+                       VerticalAlignment="Center"/>
+            <ComboBox Margin="10, 10, 10, 10"
+                      ItemsSource="{Binding channelData}"
+                      SelectedItem="{Binding SelectedChannel, Mode=TwoWay}"/>
+        </StackPanel>
+        <ScrollViewer Grid.Row="3"
+                      VerticalScrollBarVisibility="Visible"
+                      Height="400">
+            <StackPanel x:Name="ChartPanel">
+                
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Window>

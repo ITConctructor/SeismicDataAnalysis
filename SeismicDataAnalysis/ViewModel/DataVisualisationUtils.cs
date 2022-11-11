@@ -63,7 +63,7 @@ namespace SeismicDataAnalysis.ViewModel
         /// <param name="plotter">Двумерное пространство</param>
         /// <param name="yArray">Массив значений по y</param>
         /// <param name="xArray">Массив значений по x</param>
-        public static void AddLineGraph(ChartPlotter plotter, double[] yArray, double[] xArray)
+        public static void AddLineGraph(ChartPlotter plotter, double[] yArray, double[] xArray, string yTitle="Y", string xTitle="X", string header="Chart")
         {
             List<Point> points = new List<Point>();
             for (int i = 0; i < xArray.Length; i++)
@@ -80,6 +80,15 @@ namespace SeismicDataAnalysis.ViewModel
             LineGraph line = new LineGraph(_eds);
             line.LinePen = new Pen(Brushes.Black, 2);
             plotter.Children.Add(line);
+            VerticalAxisTitle YTitle = new VerticalAxisTitle();
+            YTitle.Content = yTitle;
+            HorizontalAxisTitle XTitle = new HorizontalAxisTitle();
+            XTitle.Content = xTitle;
+            Header _header = new Header();
+            _header.Content = header;
+            plotter.Children.Add(YTitle);
+            plotter.Children.Add(XTitle);
+            plotter.Children.Add(_header);
             plotter.Viewport.FitToView();
         }
 
@@ -88,12 +97,41 @@ namespace SeismicDataAnalysis.ViewModel
         /// </summary>
         /// <param name="plotter">Двумерное пространство графика</param>
         /// <param name="chan">Данные из файла</param>
-        public static void AddChannelDescription(ChartPlotter plotter, ChannelData chan)
+        public static void AddChartDescription(ChartPlotter plotter, List<double> yArray, int xNum, string maxText)
         {
             ClearTopPanel(plotter);
             //Контейнер для строк
-            StackPanel panel = new StackPanel();
-            panel.Orientation = Orientation.Vertical;
+            StackPanel textPanel = new StackPanel();
+            textPanel.Orientation = Orientation.Vertical;
+            //Количество считанных точек
+            TextBlock quality = new TextBlock();
+            string qualityText = "Points read: " + yArray.Count.ToString() + " of " + xNum;
+            quality.Text = qualityText;
+            quality.HorizontalAlignment = HorizontalAlignment.Left;
+            quality.VerticalAlignment = VerticalAlignment.Center;
+            quality.FontSize = 10;
+            textPanel.Children.Add(quality);
+            //Максимальное значение
+            TextBlock max = new TextBlock();
+            max.Text = maxText;
+            max.HorizontalAlignment = HorizontalAlignment.Left;
+            max.VerticalAlignment = VerticalAlignment.Center;
+            max.FontSize = 10;
+            textPanel.Children.Add(max);
+            plotter.TopPanel.Children.Add(textPanel);
+        }
+
+        /// <summary>
+        /// На указанной StackPanel построить графики для выбранного файла
+        /// </summary>
+        /// <param name="panel">Панель для построения</param>
+        public static void UpdateCharts(StackPanel panel, ChannelData chan)
+        {
+            //Контейнер для графиков
+            panel.Children.Clear();
+            //Контейнер для описания канала
+            StackPanel textPanel = new StackPanel();
+            textPanel.Orientation = Orientation.Vertical;
             //Название и номер станции
             TextBlock staInfo = new TextBlock();
             string staInfoText = chan.StationName + "     CGS Sta " + chan.StationNumber.ToString();
@@ -101,7 +139,7 @@ namespace SeismicDataAnalysis.ViewModel
             staInfo.HorizontalAlignment = HorizontalAlignment.Center;
             staInfo.VerticalAlignment = VerticalAlignment.Center;
             staInfo.FontSize = 20;
-            panel.Children.Add(staInfo);
+            textPanel.Children.Add(staInfo);
             //Дата и время записи
             TextBlock time = new TextBlock();
             string timeText = "Rcrd of " + chan.WeekDay + " " + chan.Month + " " + chan.Day.ToString() + ", " + chan.Year.ToString() + " "
@@ -110,16 +148,53 @@ namespace SeismicDataAnalysis.ViewModel
             time.HorizontalAlignment = HorizontalAlignment.Center;
             time.VerticalAlignment = VerticalAlignment.Center;
             time.FontSize = 20;
-            panel.Children.Add(time);
-            //Измеряемый параметр
-            TextBlock parameter = new TextBlock();
-            string parameterText = chan.PhysicalParameter;
-            parameter.Text = parameterText;
-            parameter.HorizontalAlignment = HorizontalAlignment.Center;
-            parameter.VerticalAlignment = VerticalAlignment.Center;
-            parameter.FontSize = 20;
-            panel.Children.Add(parameter);
-            plotter.TopPanel.Children.Add(panel);
+            textPanel.Children.Add(time);
+
+            //Добавляем текстовое описание канала
+            panel.Children.Add(textPanel);
+            //Добавляем графики
+
+            //График ускорения
+            double[] yA = chan.AccelerationsArray.ToArray();
+            double[] xA = DataTransformUtils.CreateArrayFromSpan(chan.SpaceOfRecord, yA.Length);
+            ChartPlotter plotterA = new ChartPlotter();
+            panel.Children.Add(plotterA);
+            string maxAText = "Peak acceleration = " + chan.PeakAcceleration.ToString() + " cm/sec2";
+            AddChartDescription(plotterA, chan.AccelerationsArray, chan.NumberOfAccelerationsPoints, maxAText);
+            //List<double> yAH = new List<double>();
+            //foreach (double y in yA)
+            //{
+            //    yAH.Add(y * Math.Sqrt(Math.Pow(chan.PeakAcceleration, 2)));
+            //}
+            AddLineGraph(plotterA, yA.ToArray(), xA.ToArray(), "Accelerations, cm/sec2", "Time, sec", "Accelerations");
+
+            //График скорости
+            double[] yV = chan.VelocitysArray.ToArray();
+            double[] xV = DataTransformUtils.CreateArrayFromSpan(chan.SpaceOfRecord, yV.Length);
+            ChartPlotter plotterV = new ChartPlotter();
+            panel.Children.Add(plotterV);
+            string maxVText = "Peak velocity = " + chan.PeakVelocity.ToString() + " cm/sec";
+            AddChartDescription(plotterV, chan.VelocitysArray, chan.NumberOfVelocitysPoints, maxVText);
+            //List<double> yVH = new List<double>();
+            //foreach (double y in yV)
+            //{
+            //    yVH.Add(y * Math.Sqrt(Math.Pow(chan.PeakVelocity, 2)));
+            //}
+            AddLineGraph(plotterV, yV.ToArray(), xV.ToArray(), "Velocitys, cm/sec", "Time, sec", "Velocitys");
+
+            //График распределения
+            double[] yD = chan.VelocitysArray.ToArray();
+            double[] xD = DataTransformUtils.CreateArrayFromSpan(chan.SpaceOfRecord, yD.Length);
+            ChartPlotter plotterD = new ChartPlotter();
+            panel.Children.Add(plotterD);
+            string maxDText = "Peak displacement = " + chan.PeakVelocity.ToString() + " cm";
+            AddChartDescription(plotterD, chan.DisplacementsArray, chan.NumberOfDisplacementsPoints, maxDText);
+            //List<double> yDH = new List<double>();
+            //foreach (double y in yD)
+            //{
+            //    yDH.Add(y * Math.Sqrt(Math.Pow(chan.PeakDisplacement, 2)));
+            //}
+            AddLineGraph(plotterD, yD.ToArray(), xD.ToArray(), "Displacements, cm/sec", "Time, sec", "Displacements");
         }
     }
 }
