@@ -11,6 +11,6 @@ namespace SeismicDataAnalysis.Model
     {
         public List<string> LoadedData { get; set; } = new List<string>();
         public ObservableCollection<FileData> TransformedData { get; set; } = new ObservableCollection<FileData>();
-        public ObservableCollection<ChannelData> ChannelData { get; set; } = new ObservableCollection<ChannelData>();
+        public ObservableCollection<BuildingData> Buildings { get; set; } = new ObservableCollection<BuildingData>();
     }
 }

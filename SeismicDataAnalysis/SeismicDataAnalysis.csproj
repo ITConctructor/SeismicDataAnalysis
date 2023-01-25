@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
     <PackageReference Include="DynamicDataDisplayWpf" Version="0.4.0" />
   </ItemGroup>
 
@@ -29,8 +30,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Algos">
+      <HintPath>..\..\..\Algos\Algos\bin\Debug\Algos.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel">
+      <HintPath>..\..\..\..\..\Windows\assembly\GAC_MSIL\Microsoft.Office.Interop.Excel\15.0.0.0__71e9bce111e9429c\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="office">
+      <HintPath>..\..\..\..\..\Windows\assembly\GAC_MSIL\office\15.0.0.0__71e9bce111e9429c\OFFICE.DLL</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Controls.DataVisualization.Toolkit">
       <HintPath>..\..\System.Windows.Controls.DataVisualization.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <HintPath>..\..\..\..\..\Windows\WinSxS\msil_system.windows.forms_b77a5c561934e089_10.0.19041.1_none_f1d47663d48a8243\System.Windows.Forms.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms.resources">
       <HintPath>..\..\..\..\..\..\..\..\Windows\WinSxS\x86_microsoft-windows-n..xcorecomp.resources_31bf3856ad364e35_10.0.19041.1_ru-ru_a6764003ca558068\System.Windows.Forms.resources.dll</HintPath>

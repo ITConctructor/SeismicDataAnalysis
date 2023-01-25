@@ -8,7 +8,7 @@
         xmlns:d3="http://research.microsoft.com/DynamicDataDisplay/1.0"
         xmlns:local="clr-namespace:SeismicDataAnalysis"
         mc:Ignorable="d"
-        Title="MainWindow" Height="Auto" Width="800">
+        Title="MainWindow" Height="Auto" Width="900">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -19,10 +19,25 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <TextBlock  Margin="10, 10, 10, 10" Text="Choose files:"/>
-            <Button Content="Browse" Margin="10, 10, 10, 10" 
-                    Command="{Binding LoadDataCommand}"/>
-            <Button Content="Save chart" Margin="10, 10, 10, 10"
-                    Command="{Binding SaveChartCommand}"/>
+            <Button Content="XML" Margin="10, 10, 10, 10" 
+                    Command="{Binding LoadXMLCommand}"/>
+            <Button Content="Cosmos" Margin="10, 10, 10, 10" 
+                    Command="{Binding LoadCosmosCommand}"/>
+            <Button Content="Clear data" Margin="10, 10, 10, 10"
+                    Command="{Binding ClearDataCommand}"/>
+            <Button Content="Export" Margin="10, 10, 10, 10"
+                    Command="{Binding ExportCSVCommand}"/>
+            <CheckBox Margin="5, 10, 10, 10"
+                      IsChecked="{Binding CompareNearestSensors, Mode=TwoWay}"/>
+            <TextBlock Margin="5, 10, 10, 10" Text="Compare nearest sensors"/>
+            <Button Content="Resort data" Margin="10, 10, 10, 10"
+                    Command="{Binding ResortDataCommand}"/>
+            <Button Content="Save data" Margin="10, 10, 10, 10"
+                    Command="{Binding SaveDataCommand}"/>
+            <Button Content="Check data" Margin="10, 10, 10, 10"
+                    Command="{Binding CheckDataCommand}"/>
+            <Button Content="Analys" Margin="10, 10, 10, 10"
+                    Command="{Binding AnalysCommand}"/>
         </StackPanel>
         <ListBox Grid.Row="1" Margin="10, 10, 10, 10" 
                  ItemsSource="{Binding transformedData}" 
@@ -31,18 +46,115 @@
                  MinHeight="50"/>
         <StackPanel Grid.Row="2" Orientation="Horizontal"
                     Margin="10, 10, 10, 10">
-            <TextBlock Text="Show data for channel:" 
+            <TextBlock Text="Show data for:" 
+                       VerticalAlignment="Center"/>
+            <TextBlock Text="Building:"
+                       VerticalAlignment="Center"
+                       Margin="10, 10, 0, 10"/>
+            <ComboBox Margin="10, 10, 10, 10"
+                      ItemsSource="{Binding buildings}"
+                      SelectedItem="{Binding SelectedBuilding, Mode=TwoWay}"
+                      SelectedIndex="0"/>
+            <TextBlock Text="Earthquake:"
+                       VerticalAlignment="Center"
+                       Margin="10, 10, 0, 10"/>
+            <ComboBox Margin="10, 10, 10, 10"
+                      ItemsSource="{Binding SelectedBuilding.EarthquakeData}"
+                      SelectedItem="{Binding SelectedEarthquake, Mode=TwoWay}"
+                      SelectedIndex="0"/>
+            <TextBlock Text="Channel:"
+                       VerticalAlignment="Center"
+                       Margin="10, 10, 0, 10"/>
+            <ComboBox Margin="10, 10, 10, 10"
+                      ItemsSource="{Binding SelectedEarthquake.ChannelData}"
+                      SelectedItem="{Binding SelectedChannel, Mode=TwoWay}"
+                      SelectedIndex="0"/>
+            <TextBlock Text="Damping:"
                        VerticalAlignment="Center"/>
             <ComboBox Margin="10, 10, 10, 10"
-                      ItemsSource="{Binding channelData}"
-                      SelectedItem="{Binding SelectedChannel, Mode=TwoWay}"/>
+                      ItemsSource="{Binding SelectedChannel.Dampings}"
+                      SelectedItem="{Binding SelectedDamping, Mode=TwoWay}"
+                      SelectedIndex="0"/>
+            <TextBlock x:Name="CheckDataTextBlock" Margin="10, 10, 10, 10" VerticalAlignment="Center" Text="Unchecked"/>
         </StackPanel>
-        <ScrollViewer Grid.Row="3"
+        <TabControl Grid.Row="3" Margin="10, 10, 10, 10">
+            <TabItem Header="Data">
+                <ScrollViewer 
                       VerticalScrollBarVisibility="Visible"
-                      Height="400">
-            <StackPanel x:Name="ChartPanel">
-                
-            </StackPanel>
-        </ScrollViewer>
+                      Height="500"
+                      x:Name="DataScrollViewer">
+                    <StackPanel Margin="10, 10, 10, 10">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="BuildingName:"/>
+                            <TextBox Margin="10, 0, 0, 0" Text="{Binding SelectedBuilding.BuildingName, Mode=TwoWay}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Location:"/>
+                            <TextBlock Margin="10, 0, 0, 0" Text="{Binding SelectedChannel.Location, Mode=TwoWay}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="LocationHeight:"/>
+                            <TextBox Margin="10, 0, 0, 0" Text="{Binding SelectedChannel.LocationHeight, Mode=TwoWay}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="LocationX:"/>
+                            <TextBox Margin="10, 0, 0, 0" Text="{Binding SelectedChannel.LocationX, Mode=TwoWay}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="LocationY:"/>
+                            <TextBox Margin="10, 0, 0, 0" Text="{Binding SelectedChannel.LocationY, Mode=TwoWay}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="BuildingLength:"/>
+                            <TextBox Margin="10, 0, 0, 0" Text="{Binding SelectedBuilding.BuildingLength, Mode=TwoWay}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="BuildingWidth:"/>
+                            <TextBox Margin="10, 0, 0, 0" Text="{Binding SelectedBuilding.BuildingWidth, Mode=TwoWay}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="StructuralReference:"/>
+                            <TextBox Margin="10, 0, 0, 0" Text="{Binding SelectedBuilding.StructuralReference, Mode=TwoWay}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Earthquake magnitude:"/>
+                            <TextBox Margin="10, 0, 0, 0" Text="{Binding SelectedEarthquake.Magnitude, Mode=TwoWay}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Hypocenter depth:"/>
+                            <TextBox Margin="10, 0, 0, 0" Text="{Binding SelectedEarthquake.HypocenterDepth, Mode=TwoWay}"/>
+                        </StackPanel>
+                        <StackPanel x:Name="DataPanel"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Charts">
+                <ScrollViewer 
+                      VerticalScrollBarVisibility="Visible"
+                      Height="500"
+                      x:Name="ChartScrollViewer">
+                    <StackPanel x:Name="ChartPanel">
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Analys">
+                <StackPanel>
+                    <ScrollViewer 
+                      VerticalScrollBarVisibility="Visible"
+                      Height="500"
+                      x:Name="AnalysScrollViewer">
+                        <StackPanel x:Name="AnalysPanel">
+                            <StackPanel x:Name="CommonAnalysPanel">
+                                
+                            </StackPanel>
+                            <StackPanel x:Name="BuildingAnalysPanel">
+                                
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
